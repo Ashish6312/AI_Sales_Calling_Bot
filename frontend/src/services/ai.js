@@ -3,38 +3,47 @@ const BASE_URL = "https://gen.pollinations.ai/v1/chat/completions";
 
 export const sendMessageToAI = async (messages, language = 'hi', userInfo = null) => {
   const contextPrefix = userInfo ? `
-    USER CONTEXT (ALREADY KNOWN - DO NOT ASK AGAIN):
-    - Name: ${userInfo.name}
-    - City: ${userInfo.city}
-    - Monthly Bill: ₹${userInfo.bill}
+    We already know: Name=${userInfo.name}, City=${userInfo.city}, Bill=₹${userInfo.bill}. Do NOT ask for these again.
   ` : "";
 
+  // Map requested language to exact script instructions
+  let langInstruction = "";
+  if (language === 'hi') langInstruction = "HINDI (MUST USE DEVANAGARI SCRIPT ONLY. NEVER USE ENGLISH LETTERS like 'aaj', 'kya'. Say 'आज', 'क्या').";
+  else if (language === 'te') langInstruction = "TELUGU (MUST USE TELUGU SCRIPT ONLY).";
+  else langInstruction = "ODIA (MUST USE ODIA SCRIPT ONLY).";
+
   const systemPrompt = `
-    ### MASTER SALESPERSON PERSONA (SOLAR EXPERT):
-    You are a high-performing Mierae Solar Sales Consultant. 
-    Mission: Convert users by educating them on massive savings and PM Surya Ghar Yojana.
+    You are a high-converting Mierae Solar Sales Bot. 
+    Mission: Qualify leads, explain PM Surya Ghar Yojana subsidy, and book a free site visit.
+    Language: You must reply ONLY in ${langInstruction}. If the user types "ji", "ha", you MUST reply entirely in the native script. NEVER use Hinglish.
 
     ${contextPrefix}
 
-    ### CORE UPDATED DATASET:
-    - SUBSIDY: 1kW: ₹30k | 2kW: ₹60k | 3kW+: ₹78k.
-    - ROI: 3–5 Years (25+ years life).
-    - Bill Reduction: 80-90% savings.
+    ### DATA & PITCH (Use naturally)
+    - PM Surya Ghar Yojana gives up to 40% subsidy (Up to ₹78,000 for 3kW).
+    - 300 units free electricity/month. 25+ years of life. Loan available at ~6.75%.
 
-    ### STRICT CONVERSATIONAL RULES:
-    1. NEVER REPEAT YOURSELF. Look at the previous messages. If you just sent the "SCHEME ESTIMATE" or "Site Visit" pitch, DO NOT send it again.
-    2. PROGRESS THE CONVERSATION. If the user answered a question, move on to the next one.
-    3. If the user agrees to a site visit, just ask what day works best (Today, Tomorrow, Weekend).
-    4. Keep responses extremely short. Tell them what they need to know, ask one question, and wait.
-    5. Language: ${language === 'hi' ? 'Hindi (STRICT RULES: Use Devanagari script ONLY. Never use English letters for Hindi)' : language === 'te' ? 'Telugu' : 'Odia'}.
+    ### CONVERSATION FLOW (Follow Strictly step-by-step)
+    - Observe the conversation history. See which step is next.
+    - Ask only ONE question per response. Keep the reply under 3 sentences.
+
+    STEP 1: Verify Ownership = Ask: "क्या आपका खुद का घर है?" (or chosen language equivalent).
+    STEP 2: Verify Roof = Ask: "छत खाली है क्या?"
+    STEP 3: The Pitch & Site Visit Booking = Briefly explain the subsidy (₹78k, zero bill) AND ask: "क्या मैं आपके लिए free site visit book कर दूं?"
+    STEP 4: Collect Number = If they say yes/agreed, ask: "आपका WhatsApp number share कर सकते हैं?"
+    STEP 5: Close = Thank them and say our team will contact them.
+
+    ### RULES
+    1. NEVER hallucinate or ask for exact addresses/time slots. Just follow the exact 5 steps above.
+    2. If the user asks a question about cost/subsidy, answer it using the DATA above and then repeat your current step's question.
+    3. ABSOLUTELY NO ENGLISH/Hinglish CHARACTERS in your response if language is set to Hindi. Period. 
   `;
 
-  // Filter messages to ensure they are properly formatted for the API and remove custom UI tags
-  const apiMessages = messages.map(m => {
+  // Filter out system ui tags to maintain clean history
+  const apiMessages = messages.map((m, index) => {
     let cleanContent = m.content;
-    // Strip out the initial greeting if it's the very first message so the AI doesn't think it said it and loop
     if (m.id === 'init') {
-      cleanContent = "[System generated greeting sent to user based on their form input]";
+      cleanContent = `[System Init - User submitted details. Do not reply to this.]`;
     }
     return {
       role: m.role,
@@ -55,7 +64,7 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
           { role: "system", content: systemPrompt },
           ...apiMessages
         ],
-        temperature: 0.3, // Lowered temperature to reduce hallucination and random option generation
+        temperature: 0.1, // extremely low to prevent deviation
       }),
     });
 
