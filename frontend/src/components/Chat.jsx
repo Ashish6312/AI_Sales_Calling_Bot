@@ -144,11 +144,11 @@ ${t.billAnalysis.success}`;
                            language === 'te' ? ['అవును, ఖాళీ ఉంది', 'లేదు, స్థలం లేదు'] :
                            ['ହଁ, ଖାଲି ଅଛି', 'ନା, ସ୍ଥାନ ନାହିଁ'];
         }
-      } else if (entireLower.includes('मालिक') || entireLower.includes('own') || entireLower.includes('इल्ल') || (entireLower.includes('घर') && entireLower.includes('?'))) {
+      } else if (entireLower.includes('मालिक') || entireLower.includes('own') || entireLower.includes('इल्ल') || entireLower.includes('खुद का घर') || entireLower.includes('अपना घर')) {
          botMsg.options = language === 'hi' ? ['हाँ, मेरा घर है', 'नहीं, किराए पर'] : 
                          language === 'te' ? ['అవును, నా సొంత ఇల్లు', 'కాదు, అద్దెకు'] :
                          ['ହଁ, ମୋର ନିଜ ଘର', 'ନା, ଭଡା'];
-      } else if (entireLower.includes('?') && (entireLower.includes('रुचि') || entireLower.includes('interested'))) {
+      } else if (entireLower.includes('?') && (entireLower.includes('रुचि') || entireLower.includes('interested') || entireLower.includes('visit') || entireLower.includes('विजिट') || entireLower.includes('बुक'))) {
         botMsg.options = [t.yes, t.no];
       }
 
