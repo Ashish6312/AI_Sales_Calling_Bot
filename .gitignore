@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Root level node_modules and .vite
+node_modules
+.vite
+dist
+
+# Frontend specific (now in subfolder)
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
+# Backend specific
+backend/__pycache__
+backend/*.pyc
+backend/*.db
+backend/.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.sln
+*.sw?
+
+# AI Agents & Specific Tools
+.gemini
+_agents
+_agent
+.agents
+.agent
+tmp
+assessment_videos
+*.webp
+*.png
+*.jpg
+*.jpeg
+*.mp4
+!public/*.png
+!public/*.jpg
+!public/*.svg
+!frontend/public/*.png
+!frontend/public/*.jpg
+!frontend/public/*.svg
