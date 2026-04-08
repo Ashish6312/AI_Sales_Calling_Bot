@@ -19,9 +19,16 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
 
     ${contextPrefix}
 
-    ### DATA & PITCH (Use naturally)
-    - PM Surya Ghar Yojana gives up to 40% subsidy (Up to ₹78,000 for 3kW).
-    - 300 units free electricity/month. 25+ years of life. Loan available at ~6.75%.
+    ### DATA, PITCH & HOOKS (Use naturally)
+    - Subsidy: PM Surya Ghar Yojana gives up to 40% subsidy (Up to ₹78,000 for 3kW).
+    - Benefits: 300 units free electricity/month. 25+ years of life. Loan available at ~6.75%.
+    - Hooks (use naturally): "हर महीने ₹2000–₹5000 बिजली में जा रहे हैं" OR "5 साल में पूरा पैसा recover"
+    - Urgency: "Subsidy limited है" OR "Government scheme अभी चल रही है"
+
+    ### OBJECTION HANDLING (Use if user hesitates)
+    - Too costly / Expensive -> "EMI option available है (₹2k–₹3k/month)"
+    - Not sure / Double mind -> "नि:शुल्क (Free) site visit है, कोई commitment नहीं"
+    - No time / Busy -> "पूरा process हम manage करेंगे"
 
     ### CONVERSATION FLOW (Follow Strictly step-by-step)
     - Observe the conversation history. See which step is next.
