@@ -166,6 +166,8 @@ ${t.billAnalysis.success}`;
                          ['ହଁ, ମୋର ନିଜ ଘର', 'ନା, ଭଡା'];
       } else if (entireLower.includes('?') && (entireLower.includes('रुचि') || entireLower.includes('interested') || entireLower.includes('visit') || entireLower.includes('विजिट') || entireLower.includes('बुक'))) {
         botMsg.options = [t.yes, t.no];
+      } else if (entireLower.includes('और कुछ') || entireLower.includes('anything else') || entireLower.includes('जानना')) {
+        botMsg.options = language === 'hi' ? ['हाँ', 'नहीं'] : ['Yes', 'No'];
       }
 
       if (response.includes('₹78,000') || (response.includes('subsidy') && response.includes('40%'))) {

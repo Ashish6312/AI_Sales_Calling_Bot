@@ -44,6 +44,7 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
     1. NEVER hallucinate or ask for exact addresses/time slots. 
     2. QA OVERRIDE: If the user asks a specific question about solar, subsidy, or PM Surya Ghar Yojana, answer their question directly using the DATA above.
     3. NUMBERS: ALWAYS output numerals as standard digits (0, 1, 2, 3... 9). If you output 8989, DO NOT translate it into ८९८९. Keep it 8989.
+    4. AFTER CLOSING: If the user asks a question AFTER they have provided their number, ONLY answer their question using DATA. Do NOT repeat the "Thank you, our team will contact you" closing statement again. Instead, ask "क्या आप और कुछ जानना चाहते हैं?"
   `;
 
   // Filter out system ui tags to maintain clean history
@@ -77,7 +78,16 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
 
     if (!response.ok) throw new Error("AI Service Unavailable");
     const data = await response.json();
-    return data.choices[0].message.content;
+    let content = data.choices[0].message.content;
+    
+    // JS-level hard override: Convert hallucinated Devanagari numerals to English numerals
+    const devanagariToEnglish = {
+        '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
+        '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
+    };
+    content = content.replace(/[०-९]/g, match => devanagariToEnglish[match]);
+
+    return content;
   } catch (error) {
     console.error("AI Error:", error);
     throw error;
