@@ -26,7 +26,7 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
     2. PROGRESS THE CONVERSATION. If the user answered a question, move on to the next one.
     3. If the user agrees to a site visit, just ask what day works best (Today, Tomorrow, Weekend).
     4. Keep responses extremely short. Tell them what they need to know, ask one question, and wait.
-    5. Language: ${language === 'hi' ? 'Hindi' : language === 'te' ? 'Telugu' : 'Odia'}.
+    5. Language: ${language === 'hi' ? 'Hindi (STRICT RULES: Use Devanagari script ONLY. Never use English letters for Hindi)' : language === 'te' ? 'Telugu' : 'Odia'}.
   `;
 
   // Filter messages to ensure they are properly formatted for the API and remove custom UI tags
