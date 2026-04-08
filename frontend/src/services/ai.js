@@ -8,9 +8,9 @@ export const sendMessageToAI = async (messages, language = 'hi', userInfo = null
 
   // Map requested language to exact script instructions
   let langInstruction = "";
-  if (language === 'hi') langInstruction = "HINDI (MUST USE DEVANAGARI SCRIPT ONLY. NEVER USE ENGLISH LETTERS like 'aaj', 'kya'. Say 'आज', 'क्या').";
-  else if (language === 'te') langInstruction = "TELUGU (MUST USE TELUGU SCRIPT ONLY).";
-  else langInstruction = "ODIA (MUST USE ODIA SCRIPT ONLY).";
+  if (language === 'hi') langInstruction = "HINDI (MUST USE DEVANAGARI SCRIPT ONLY. NEVER USE ENGLISH LETTERS like 'aaj', 'kya'. Say 'आज', 'क्या'). However, ALWAYS use standard English numerals (0-9) for numbers (e.g., 89890), DO NOT use Devanagari numerals (e.g., ८९८९०).";
+  else if (language === 'te') langInstruction = "TELUGU (MUST USE TELUGU SCRIPT ONLY. Use standard English numerals 0-9).";
+  else langInstruction = "ODIA (MUST USE ODIA SCRIPT ONLY. Use standard English numerals 0-9).";
 
   const systemPrompt = `
     You are a high-converting Mierae Solar Sales Bot. 
