@@ -80,7 +80,20 @@ def create_lead(lead: LeadCreate, db: Session = Depends(get_db)):
     db_lead = Lead(name=lead.name, phone=lead.phone, city=lead.city, bill=lead.bill)
     db.add(db_lead)
     db.commit()
-    return {"message": "Success"}
+    db.refresh(db_lead)
+    return {"message": "Success", "id": db_lead.id}
+
+class LeadUpdate(BaseModel):
+    phone: str
+
+@app.put("/api/leads/{lead_id}")
+def update_lead(lead_id: int, lead_update: LeadUpdate, db: Session = Depends(get_db)):
+    db_lead = db.query(Lead).filter(Lead.id == lead_id).first()
+    if db_lead:
+        db_lead.phone = lead_update.phone
+        db.commit()
+        return {"message": "Updated"}
+    return {"message": "Not found"}
 
 @app.post("/api/chat-history")
 def save_chat(chat: ChatCreate, db: Session = Depends(get_db)):

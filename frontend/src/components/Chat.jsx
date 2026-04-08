@@ -31,6 +31,7 @@ const Chat = () => {
   const [language, setLanguage] = useState('hi');
   const [onboarded, setOnboarded] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [leadId, setLeadId] = useState(null);
   const sessionId = useRef(`session_${Date.now()}`).current;
   const scrollRef = useRef(null);
 
@@ -55,11 +56,13 @@ const Chat = () => {
     setOnboarded(true);
 
     try {
-      await fetch(`${API_BASE}/leads`, {
+      const res = await fetch(`${API_BASE}/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+      const resData = await res.json();
+      if (resData.id) setLeadId(resData.id);
     } catch (e) {}
 
     const initialText = language === 'hi' 
@@ -125,6 +128,19 @@ ${t.billAnalysis.success}`;
   const handleSend = async (val = input) => {
     const text = typeof val === 'string' ? val : input;
     if (!text.trim() || isLoading) return;
+
+    if (leadId) {
+      const nums = text.replace(/[^0-9]/g, '');
+      if (nums.length >= 10 && nums.length <= 15) {
+        try {
+          await fetch(`${API_BASE}/leads/${leadId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: nums })
+          });
+        } catch (e) {}
+      }
+    }
 
     const userMsg = { role: 'user', content: text, id: Date.now() + '_user' };
     setMessages(p => [...p, userMsg]);
